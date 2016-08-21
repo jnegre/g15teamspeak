@@ -67,6 +67,7 @@ def refreshDisplay():
     for clid in talking:
       status += '"'+getNickname(clid)+'" '
   else:
+    #TODO better explanation of the real issue
     status = 'TS "            !! NO TELNET !!" '
   print(status);
   g15 = open(PIPE, mode='w', buffering=1);
@@ -90,5 +91,11 @@ while(True):
       elif index == 2: #notifyClientPokeRegexp
         onNotifyClientPoke(match)
   except EOFError:
-    print("EOF :-(")
+    print(":-( EOF")
     tn = None
+  except (ConnectionRefusedError, ConnectionResetError):
+    print(":-( No TS?")
+    tn = None
+    refreshDisplay()
+    time.sleep(5) #wait a little bit
+
