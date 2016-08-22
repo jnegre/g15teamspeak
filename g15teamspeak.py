@@ -40,7 +40,7 @@ def decodeTsString(bstring):
 
 notifyTalkStatusChangeRegexp = b"notifytalkstatuschange schandlerid=1 status=(.) isreceivedwhisper=. clid=(.*)\n"
 def onNotifyTalkStatusChange(match):
-  status = True if match.group(1)==b'1' else False
+  status = match.group(1)==b'1'
   clid = int(match.group(2))
   if status:
     talking.append(clid)
