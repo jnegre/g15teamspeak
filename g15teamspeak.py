@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 
-import os
+from PIL import Image, ImageFont, ImageDraw
 import telnetlib
 import time
+
+import g15daemon
 
 TS3_HOST = "localhost"
 TS3_PORT = 25639
@@ -13,11 +15,7 @@ PIPE = '/tmp/g15-teamspeak-pipe'
 nicknames = {}
 talking = []
 
-#FIXME foobar if a file with the same name exists or if g15composer fails to launch
-g15id = os.spawnlp(os.P_NOWAIT, 'g15composer', 'g15composer', PIPE)
-print("G15 screen pid = "+str(g15id))
-#wait for g15compose to create the pipe (we should do it ourselves)
-time.sleep(2)
+g15 = g15daemon.G15daemon()
 
 def getTelnet():
   telnet = telnetlib.Telnet(TS3_HOST, TS3_PORT)
@@ -61,19 +59,21 @@ def onNotifyClientPoke(match):
   msg = decodeTsString(match.group(2))
   print(invoker+": "+msg)
 
+font = ImageFont.truetype("4x6.pcf.gz", 6)
 def refreshDisplay():
+  screen = Image.new("1", (160, 43), 0)
+  draw = ImageDraw.Draw(screen)
   if tn != None:
-    status = 'TS "            -= TEAM SPEAK =-" '
+    draw.text((0, 0), "            -= TEAM SPEAK =-", font=font, fill=1)
+    i=0
     for clid in talking:
-      status += '"'+getNickname(clid)+'" '
+      i += 6
+      draw.text((0, i), getNickname(clid), font=font, fill=1)
   else:
     #TODO better explanation of the real issue
-    status = 'TS "            !! NO TELNET !!" '
-  print(status);
-  g15 = open(PIPE, mode='w', buffering=1);
-  g15.write(status+"\n")
-  g15.close()
-
+    draw.text((0, 0), "            !! NO TELNET !!", font=font, fill=1)
+  g15.draw(screen)
+  
 while(True):
   try:
     refreshDisplay()
