@@ -60,18 +60,31 @@ def onNotifyClientPoke(match):
   print(invoker+": "+msg)
 
 font = ImageFont.truetype("4x6.pcf.gz", 6)
+bombImage = Image.open("bomb.xbm")
+buttonImage = Image.open("button.xbm")
+
+def drawButton(screen, draw, index, text):
+  screen.paste(buttonImage, (40*index, 35))
+  textSize = draw.textsize(text, font=font)
+  draw.text((40*index+20-textSize[0]/2, 36), text, font=font, fill=0)
+
 def refreshDisplay():
   screen = Image.new("1", (160, 43), 0)
   draw = ImageDraw.Draw(screen)
   if tn != None:
     draw.text((0, 0), "            -= TEAM SPEAK =-", font=font, fill=1)
+    #drawButton(screen, draw, 0, "Test 1")
+    #drawButton(screen, draw, 1, "Test 2")
+    #drawButton(screen, draw, 2, "Test 3")
+    #drawButton(screen, draw, 3, "Test 4")
     i=0
     for clid in talking:
       i += 6
       draw.text((0, i), getNickname(clid), font=font, fill=1)
   else:
     #TODO better explanation of the real issue
-    draw.text((0, 0), "            !! NO TELNET !!", font=font, fill=1)
+    screen.paste(bombImage, (6, 5))
+    draw.text((45, 3), "Could not connect to your\nTeamSpeak client.\n\nRetrying...", font=font, fill=1)
   g15.draw(screen)
   
 while(True):
