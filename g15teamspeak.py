@@ -4,7 +4,7 @@ from PIL import Image, ImageFont, ImageDraw
 import telnetlib
 import time
 
-import g15daemon
+import g15
 
 TS3_HOST = "localhost"
 TS3_PORT = 25639
@@ -15,7 +15,7 @@ PIPE = '/tmp/g15-teamspeak-pipe'
 nicknames = {}
 talking = []
 
-g15 = g15daemon.G15daemon()
+g15 = g15.Daemon()
 
 def getTelnet():
   telnet = telnetlib.Telnet(TS3_HOST, TS3_PORT)

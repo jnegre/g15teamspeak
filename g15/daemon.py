@@ -3,7 +3,7 @@ import socket
 DISPLAY_WIDTH = 160
 DISPLAY_HEIGHT = 43
 
-class G15daemon:
+class Daemon:
 
   def __init__(self):
     self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
