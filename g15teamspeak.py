@@ -1,11 +1,15 @@
 #!/usr/bin/python3
 
+import os
+import sys
 import ts
 import g15
 import queue
 from functools import partial
 from enum import Enum
 from PIL import Image, ImageFont, ImageDraw
+
+ROOT_DIR = os.path.dirname(os.path.realpath(sys.argv[0]))
 
 #accessed only in the main thread
 state = {
@@ -87,9 +91,9 @@ def onwhoami(obj):
 g15Daemon = g15.Daemon()
 
 font = ImageFont.truetype("4x6.pcf.gz", 6)
-bombImage = Image.open("bomb.xbm")
-disconnectImage = Image.open("disconnected.xbm")
-buttonImage = Image.open("button.xbm")
+bombImage = Image.open(ROOT_DIR+"/bomb.xbm")
+disconnectImage = Image.open(ROOT_DIR+"/disconnected.xbm")
+buttonImage = Image.open(ROOT_DIR+"/button.xbm")
 
 def drawButton(screen, draw, index, text):
   screen.paste(buttonImage, (40*index, 35))
